@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.PersonMapper">
+
+    <sql id="if-person-values">
+        <if test="person.passwd != null">
+            PASSWD = #{person.passwd},
+        </if>
+        <if test="person.authority != null">
+            AUTHORITY = #{person.authority},
+        </if>
+        <if test="person.name != null">
+            NAME = #{person.name},
+        </if>
+        <if test="person.sex != null">
+            SEX = #{person.sex},
+        </if>
+        <if test="person.birthday != null">
+            BIRTHDAY = #{person.birthday},
+        </if>
+        <if test="person.department != null">
+            DEPARTMENT = #{person.department},
+        </if>
+        <if test="person.job != null">
+            JOB = #{person.job},
+        </if>
+        <if test="person.eduLevel != null">
+            EDU_LEVEL = #{person.eduLevel},
+        </if>
+        <if test="person.spcialty != null">
+            SPCIALTY = #{person.spcialty},
+        </if>
+        <if test="person.address != null">
+            ADDRESS = #{person.address},
+        </if>
+        <if test="person.tel != null">
+            TEL = #{person.tel},
+        </if>
+        <if test="person.email != null">
+            EMAIL = #{person.email},
+        </if>
+        <if test="person.state != null">
+            STATE = #{person.state},
+        </if>
+        <if test="person.remark != null">
+            REMARK =#{person.remark}
+        </if>
+    </sql>
+    
+    <insert id="insertPerson" parameterType="Person">
+        insert into pms.person (ID,PASSWD,AUTHORITY,NAME,SEX,BIRTHDAY,DEPARTMENT,JOB,EDU_LEVEL,SPCIALTY,ADDRESS,TEL,EMAIL,STATE,REMARK)
+        values (#{person.id},#{person.passwd},#{person.authority},#{person.name},#{person.sex},#{person.birthday},#{person.department},#{person.job},#{person.eduLevel},#{person.spcialty},#{person.address},#{person.tel},#{person.email},#{person.state},#{person.remark});
+    </insert>
+
+    <select id="selectPerson" parameterType="int" resultType="person" flushCache="true">
+        select * from pms.person  where ID=#{id};
+    </select>
+
+    <update id="update" parameterType="Person">
+        update pms.person
+        <set>
+        <include refid="if-person-values"></include>
+        </set>
+        where ID=#{person.id};
+    </update>
+</mapper>
