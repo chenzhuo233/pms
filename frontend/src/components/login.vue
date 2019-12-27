@@ -9,7 +9,7 @@
         label-width="80px"
         class="loginForm"
       >
-        <h3>登陆</h3>
+        <h3>登录</h3>
         <el-form-item label="用户名" prop="name">
           <el-input type="text" v-model="form.name" auto-complete="off" placeholder="请输入用户名"></el-input>
         </el-form-item>
@@ -25,13 +25,14 @@
   </div>
 </template>
 <script>
+import request from "../axios";
 export default {
   data() {
     return {
       logining: false,
       form: {
-        name: "admin",
-        password: "123456"
+        name: "",
+        password: ""
       },
       ruleForm: {
         name: [{ required: true, message: "请输入账号", trigger: "blur" }],
@@ -41,18 +42,39 @@ export default {
   },
   methods: {
     submit(event) {
+      //let that = this;
       this.$refs.form.validate(valid => {
+        let that = this;
         if (valid) {
           this.logining = true;
           if (this.form.name === "admin" && this.form.password === "123456") {
             this.logining = false;
-            sessionStorage.setItem("user", this.form.name);
-            this.$router.push({ name: "home" });
+            sessionStorage.setItem("loginInfo", this.form.name);
+            this.$router.push("/home");
           } else {
             this.logining = false;
-            this.$alert("name or password wrong!", "info", {
-              confirmButtonText: "ok"
-            });
+            request({
+              url: "persons/" + that.form.name,
+              method: "GET"
+            })
+              .then(response => {
+                let person = response.data;
+                if (
+                  that.form.name == person.id &&
+                  that.form.password == person.passwd
+                ) {
+                  sessionStorage.setItem("loginInfo", that.form.name);
+                  this.$router.push("/person");
+                } else {
+                  this.$alert("name or password wrong!", "info", {
+                    confirmButtonText: "ok"
+                  });
+                }
+              })
+              .catch(err => {
+                console.log(err);
+                alert("用户不存在");
+              });
           }
         } else {
           console.log("error submit!");

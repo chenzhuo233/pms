@@ -1,14 +1,14 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-
+import login from '../components/login.vue'
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: Home
+    name: 'login',
+    component: login
   },
   {
     path: '/about',
@@ -21,8 +21,24 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: ()=> import('../components/login.vue')
-  }
+    component: login
+  },
+  {
+    path:'/person',
+    name:'person',
+    component:() => import('../views/person.vue'),
+    meta:{
+      requireLogin:true
+    }
+  },
+  {
+    path: '/home',
+    name: 'home',
+    component: Home,
+    meta:{
+      requireLogin:true
+    }
+  },
 ]
 
 const router = new VueRouter({
